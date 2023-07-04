@@ -133,4 +133,4 @@ dist
 .pnp.*
 
 # result
-result.jpeg
+result_*.jpeg
