@@ -19,5 +19,5 @@ async function findRelatedImage(testImagePath) {
 const result1 = await findRelatedImage('./test_1.jpeg')
 const result2 = await findRelatedImage('./test_2.jpeg')
 
-fs.writeFileSync('./result_1.jpeg', result, 'base64')
-fs.writeFileSync('./result_2.jpeg', result, 'base64')
+fs.writeFileSync('./result_1.jpeg', result1, 'base64')
+fs.writeFileSync('./result_2.jpeg', result2, 'base64')
