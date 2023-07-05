@@ -1,12 +1,10 @@
-import weaviate from 'weaviate-ts-client'
-import fs from 'fs'
+import weaviate from 'weaviate-ts-client';
+import fs from 'fs';
+
 const client = weaviate.client({
     scheme: 'http',
-    host: 'localhost:8080'
-})
-
-const schemaRes = await client.schema.getter().do()
-
+    host: 'localhost:8080',
+});
 
 const schemaConfig = {
     'class': 'Meme',
@@ -15,90 +13,102 @@ const schemaConfig = {
     'moduleConfig': {
         'img2vec-neural': {
             'imageFields': [
-                'image'
-            ]
-        }
+                'image',
+            ],
+        },
     },
     'properties': [
         {
             'name': 'image',
-            'dataType': ['blob']
+            'dataType': ['blob'],
         },
         {
             'name': 'text',
-            'dataType': ['string']
-        }
-    ]
-}
+            'dataType': ['string'],
+        },
+    ],
+};
 
 async function addSchema() {
-    const res = await client.schema.
-        classCreator().
-        withClass(schemaConfig).do();
-    console.log(res);
+    try {
+        const res = await client.schema.classCreator().withClass(schemaConfig).do();
+        logSuccess(res);
+    } catch (error) {
+        logError(error);
+    }
 }
 
 async function importImages(directoryPath) {
-    const files = fs.readdirSync(directoryPath);
+    try {
+        const files = fs.readdirSync(directoryPath);
 
-    await Promise.all(
-        files.map(async (file) => {
-            const filePath = `${directoryPath}/${file}`;
-            const img = fs.readFileSync(filePath);
-            const b64 = Buffer.from(img).toString('base64');
-            const txt = file.split('.')[0].split('_').join(' ')
-            await client.data.creator()
-                .withClassName('Meme')
-                .withProperties({
-                    image: b64,
-                    text: txt,
-                })
-                .do();
-        })
-    );
+        await Promise.all(
+            files.map(async (file) => {
+                const filePath = `${directoryPath}/${file}`;
+                const img = fs.readFileSync(filePath);
+                const b64 = Buffer.from(img).toString('base64');
+                const txt = file.split('.')[0].split('_').join(' ');
+                await client.data.creator()
+                    .withClassName('Meme')
+                    .withProperties({
+                        image: b64,
+                        text: txt,
+                    })
+                    .do();
+            }),
+        );
+        logSuccess('Image import completed.');
+    } catch (error) {
+        logError(`Error occurred during image importing: ${error}`);
+    }
 }
 
 async function deleteObject(className, idToDelete) {
-    const res = await client.data
-        .deleter()
-        .withClassName(className)
-        .withId(idToDelete)
-        .do();
-    console.log(res);
+    try {
+        const res = await client.data
+            .deleter()
+            .withClassName(className)
+            .withId(idToDelete)
+            .do();
+        logSuccess(res);
+    } catch (error) {
+        logError(error);
+    }
 }
 
 async function deleteClass(className) {
-    const res = client.schema
-        .classDeleter()
-        .withClassName(className)
-        .do()
-        .then(res => {
-            console.log(res);
-        })
-        .catch(err => {
-            console.error(err)
-        });
+    try {
+        const res = await client.schema
+            .classDeleter()
+            .withClassName(className)
+            .do();
+        logSuccess(res);
+    } catch (error) {
+        logError(error);
+    }
 }
-// await deleteClass('Meme');
 
 async function checkData() {
-    const res = await client.data
-        .getter()
-        .do()
-        .then((res) => {
-            console.log(res)
-        })
-        .catch((err) => {
-            console.error(err)
-        });
+    try {
+        const res = await client.data.getter().do();
+        logSuccess(res);
+    } catch (error) {
+        logError(error);
+    }
 }
 
-// await addSchema();
-// await importImages('./img')
-//     .then(() => {
-//         console.log('Image import completed.');
-//     })
-//     .catch((error) => {
-//         console.error('Error occurred during image importing:', error);
-//     });
-await checkData();
+function logSuccess(message) {
+    console.log(message);
+}
+
+function logError(error) {
+    console.error(error);
+}
+
+async function main() {
+    // await addSchema();
+    // await importImages('./img/samples');
+    await checkData();
+}
+// Run the main function
+main();
