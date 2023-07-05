@@ -1,23 +1,42 @@
-import weaviate from 'weaviate-ts-client'
-import fs from 'fs'
+import weaviate from 'weaviate-ts-client';
+import fs from 'fs';
+
 const client = weaviate.client({
     scheme: 'http',
-    host: 'localhost:8080'
-})
+    host: 'localhost:8080',
+});
 
-async function findRelatedImage(testImagePath) {
-    const test = Buffer.from(fs.readFileSync(testImagePath)).toString('base64')
-    const resImage = await client.graphql.get()
-        .withClassName('Meme')
-        .withFields(['image'])
-        .withNearImage({ image: test })
-        .withLimit(1)
-        .do();
-    return resImage.data.Get.Meme[0].image;
+async function findRelatedImages(testImagePath, counts = 1) {
+    try {
+        const test = Buffer.from(fs.readFileSync(testImagePath)).toString('base64');
+        const resImage = await client.graphql.get()
+            .withClassName('Meme')
+            .withFields(['image'])
+            .withNearImage({ image: test })
+            .withLimit(counts)
+            .do();
+        return resImage.data.Get.Meme.map(meme => meme.image);
+    } catch (error) {
+        console.error(`Failed to find related images: ${error}`);
+        throw error; // Rethrow the error for the caller to handle
+    }
 }
 
-const result1 = await findRelatedImage('./img/test/test_1.jpeg')
-const result2 = await findRelatedImage('./img/test/test_2.jpeg')
+async function writeImageResults(imagePath, resultPath, counts = 1) {
+    try {
+        const results = await findRelatedImages(imagePath, counts);
+        results.forEach((result, index) => {
+            const resultFilePath = `${resultPath}_${index + 1}.jpeg`;
+            fs.writeFileSync(resultFilePath, result, 'base64');
+            console.log(`Image result saved at ${resultFilePath}`);
+        });
+    } catch (error) {
+        console.error(`Failed to write image results: ${error}`);
+    }
+}
 
-fs.writeFileSync('./img/results/result_1.jpeg', result1, 'base64')
-fs.writeFileSync('./img/results/result_2.jpeg', result2, 'base64')
+async function main() {
+    await writeImageResults('./img/test/test_3.jpeg', './img/results/result', 2);
+}
+
+main();
