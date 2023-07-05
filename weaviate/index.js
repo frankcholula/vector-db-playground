@@ -102,19 +102,3 @@ async function checkData() {
 //         console.error('Error occurred during image importing:', error);
 //     });
 // await checkData();
-
-
-
-async function findRelatedImage(testImagePath) {
-    const test = Buffer.from(fs.readFileSync(testImagePath)).toString('base64')
-    const resImage = await client.graphql.get()
-        .withClassName('Meme')
-        .withFields(['image'])
-        .withNearImage({ image: test })
-        .withLimit(1)
-        .do();
-    return resImage.data.Get.Meme[0].image;
-}
-
-const result = await findRelatedImage('./test.jpeg')
-fs.writeFileSync('./result.jpg', result, 'base64')
