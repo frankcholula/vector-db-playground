@@ -16,8 +16,8 @@ async function findRelatedImage(testImagePath) {
     return resImage.data.Get.Meme[0].image;
 }
 
-const result1 = await findRelatedImage('./test_1.jpeg')
-const result2 = await findRelatedImage('./test_2.jpeg')
+const result1 = await findRelatedImage('./img/test/test_1.jpeg')
+const result2 = await findRelatedImage('./img/test/test_2.jpeg')
 
-fs.writeFileSync('./result_1.jpeg', result1, 'base64')
-fs.writeFileSync('./result_2.jpeg', result2, 'base64')
+fs.writeFileSync('./img/results/result_1.jpeg', result1, 'base64')
+fs.writeFileSync('./img/results/result_2.jpeg', result2, 'base64')

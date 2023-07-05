@@ -101,4 +101,4 @@ async function checkData() {
 //     .catch((error) => {
 //         console.error('Error occurred during image importing:', error);
 //     });
-// await checkData();
+await checkData();
