@@ -29,10 +29,10 @@ const schemaConfig = {
     ],
 };
 
-async function addSchema() {
+async function addSchema(schemaConfig) {
     try {
         const res = await client.schema.classCreator().withClass(schemaConfig).do();
-        logSuccess(res);
+        logSuccess(`schema '${schemaConfig.class}' successfully created.`);
     } catch (error) {
         logError(error);
     }
@@ -70,7 +70,7 @@ async function deleteObject(className, idToDelete) {
             .withClassName(className)
             .withId(idToDelete)
             .do();
-        logSuccess(res);
+        logSuccess('Object deleted successfully.');
     } catch (error) {
         logError(error);
     }
@@ -82,7 +82,7 @@ async function deleteClass(className) {
             .classDeleter()
             .withClassName(className)
             .do();
-        logSuccess(res);
+        logSuccess(`class '${className}' successfully deleted.`);
     } catch (error) {
         logError(error);
     }
@@ -106,10 +106,10 @@ function logError(error) {
 }
 
 async function main() {
-    // await addSchema();
+    // await addSchema(schemaConfig);
     // await deleteClass('Meme');
-    // await importImages('./img/samples');
-    await checkData();
+    await importImages('./img/samples');
+    // await checkData();
 }
 // Run the main function
 main();
