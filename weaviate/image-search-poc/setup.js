@@ -108,7 +108,7 @@ function logError(error) {
 async function main() {
     // await addSchema(schemaConfig);
     // await deleteClass('Meme');
-    await importImages('./img/samples');
+    await importImages('./img/samples/女學生');
     // await checkData();
 }
 // Run the main function

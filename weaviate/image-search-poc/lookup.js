@@ -36,7 +36,7 @@ async function writeImageResults(imagePath, resultPath, counts = 1) {
 }
 
 async function main() {
-    await writeImageResults('./img/test/test_3.jpeg', './img/results/result', 5);
+    await writeImageResults('./img/test/test_5.jpg', './img/results/result', 5);
 }
 
 main();
