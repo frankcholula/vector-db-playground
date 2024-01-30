@@ -7,7 +7,7 @@ const client = weaviate.client({
 });
 
 const schemaConfig = {
-    'class': 'Meme',
+    'class': 'Posts',
     'vectorizer': 'img2vec-neural',
     'vectorIndexType': 'hnsw',
     'moduleConfig': {
@@ -49,7 +49,7 @@ async function importImages(directoryPath) {
                 const b64 = Buffer.from(img).toString('base64');
                 const txt = file.split('.')[0].split('_').join(' ');
                 await client.data.creator()
-                    .withClassName('Meme')
+                    .withClassName('Posts')
                     .withProperties({
                         image: b64,
                         text: txt,
@@ -107,8 +107,12 @@ function logError(error) {
 
 async function main() {
     // await addSchema(schemaConfig);
-    // await deleteClass('Meme');
-    await importImages('./img/samples/女學生');
+    // await deleteClass('Posts');
+    await importImages('./img/samples/中出/');
+    await importImages('./img/samples/人妻/');
+    await importImages('./img/samples/多P/');
+    await importImages('./img/samples/女學生/');
+    await importImages('./img/samples/巨乳/');
     // await checkData();
 }
 // Run the main function
