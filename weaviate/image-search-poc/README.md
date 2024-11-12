@@ -1,5 +1,5 @@
 # Vector Database and HNSW Index
-
+![results](results.png)
 This is a quick demo of the HNSW Index in Weaviate.
 
 ## Running the demo
