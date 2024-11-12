@@ -106,9 +106,11 @@ function logError(error) {
 }
 
 async function main() {
-    // await addSchema(schemaConfig);
     // await deleteClass('MSRC');
-    await importImages('./img/samples/class_1');
+    await addSchema(schemaConfig);
+    for (let i = 1; i <= 20; i++) {
+        await importImages(`./img/samples/class_${i}`);
+    }
     // await checkData();
 }
 // Run the main function
